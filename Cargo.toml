@@ -24,6 +24,7 @@ sqlx = { version = "0.5.10", default-features = false, features = [ "runtime-act
 unicode-segmentation = "1"
 validator = "0.14"
 reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
+linkify = "0.8"
 
 # Test
 claim = "0.5"
