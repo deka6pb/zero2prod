@@ -27,6 +27,7 @@ reqwest = { version = "0.11", default-features = false, features = ["json", "rus
 linkify = "0.8"
 rand = { version = "0.8", features=["std_rng"] }
 thiserror = "1"
+anyhow = "1"
 
 # Test
 claim = "0.5"
