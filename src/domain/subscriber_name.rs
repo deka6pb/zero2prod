@@ -26,8 +26,8 @@ impl AsRef<str> for SubscriberName {
 
 #[cfg(test)]
 mod tests {
-    use claim::{assert_err, assert_ok};
     use crate::domain::SubscriberName;
+    use claim::{assert_err, assert_ok};
 
     #[test]
     fn a_256_grapheme_long_name_s_valid() {
@@ -57,13 +57,13 @@ mod tests {
     fn names_containing_an_invalid_character_are_rejected() {
         for name in &['/', '(', ')', '"', '<', '>', '\\', '{', '}'] {
             let name = name.to_string();
-            assert_err!(SubscriberName:: parse(name));
+            assert_err!(SubscriberName::parse(name));
         }
     }
 
     #[test]
     fn a_valid_name_is_parsed_successfully() {
         let name = "Ursula Le Guin".to_string();
-        assert_ok!(SubscriberName:: parse(name));
+        assert_ok!(SubscriberName::parse(name));
     }
 }

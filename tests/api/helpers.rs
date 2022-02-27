@@ -3,8 +3,8 @@ use reqwest::Url;
 use sqlx::{Connection, PgConnection, PgPool};
 use uuid::Uuid;
 use wiremock::MockServer;
-use zero2prod::configuration::{DatabaseSettings, get_configuration};
-use zero2prod::startup::{Application, get_connection_pool};
+use zero2prod::configuration::{get_configuration, DatabaseSettings};
+use zero2prod::startup::{get_connection_pool, Application};
 use zero2prod::telemetry::{get_subscriber, init_subscriber};
 
 static TRACING: Lazy<()> = Lazy::new(|| {
@@ -34,7 +34,7 @@ pub struct TestApp {
 
 impl TestApp {
     pub async fn post_subscriptions(&self, body: String) -> reqwest::Response {
-        reqwest::Client:: new()
+        reqwest::Client::new()
             .post(&format!("{}/subscriptions", &self.address))
             .header("Content-Type", "application/x-www-form-urlencoded")
             .body(body)
@@ -43,13 +43,8 @@ impl TestApp {
             .expect("Failed to execute request.")
     }
 
-    pub fn get_confirmation_links(
-        &self,
-        email_request: &wiremock::Request
-    ) -> ConfirmationLinks {
-        let body: serde_json::Value = serde_json::from_slice(
-            &email_request.body
-        ).unwrap();
+    pub fn get_confirmation_links(&self, email_request: &wiremock::Request) -> ConfirmationLinks {
+        let body: serde_json::Value = serde_json::from_slice(&email_request.body).unwrap();
 
         // Extract the link from one of the request fields.
         let get_link = |s: &str| {
@@ -67,10 +62,7 @@ impl TestApp {
 
         let html = get_link(&body["HtmlBody"].as_str().unwrap());
         let plain_text = get_link(&body["TextBody"].as_str().unwrap());
-        ConfirmationLinks {
-            html,
-            plain_text
-        }
+        ConfirmationLinks { html, plain_text }
     }
 }
 
@@ -99,7 +91,7 @@ pub async fn spawn_app() -> TestApp {
         address: format!("http://127.0.0.1:{}", application_port),
         port: application_port,
         db_pool: get_connection_pool(&configuration.database),
-        email_server
+        email_server,
     }
 }
 
